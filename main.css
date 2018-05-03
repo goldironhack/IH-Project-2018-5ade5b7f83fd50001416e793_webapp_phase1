@@ -1,0 +1,148 @@
+#googleMapWraper {
+	height: 600px;
+	margin-top: 30px;
+}
+
+#googleMapContainer	{
+	padding-top: 20px;
+	width: 100%;
+	height: 100%;
+}
+
+#mapButtonsDiv{
+	width: 100%;
+	height: 40px;
+	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+.mapButton{
+	width: 20%;
+	height: 90%;
+	margin-right: 5%;
+}
+
+#drawDistances{
+	margin-right: 0;
+}
+
+#drawNB {
+	margin-left: 2.1%;
+}
+
+#chartButtonDiv{
+	width: 100%;
+	height: 90px;
+	margin-top: 50px;
+}
+
+#drawBarChart{
+	width: 70%;
+	margin-left: 15%;
+	height: 40%;
+}
+
+#bestObtions {
+	height: 700px;
+	margin-top: 70px;
+}
+
+#chart4 {
+	width: 45%;
+	height: 50%;	
+}
+
+#chart5 {
+	width: 45%;
+	height: 50%;	
+}
+
+button {
+	margin-top: 15px;
+}
+
+table{
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}	
+
+table, th, td{
+	padding: 5px;
+	border: 1px solid black;
+	text-align: center;
+}
+
+#tableWrapper {
+	margin-top: 15px;
+  position:relative;
+  width:100%;
+  height: 430px;
+}
+
+#tableScroll {
+  height:100%;
+  overflow:auto;  
+  margin-top:20px;
+}
+
+.table-buttons-div {
+	width: 100%;
+	height: 40px;
+	padding-left: 10%;
+}
+
+.table-buttons {
+	width: 40%;
+	height: 90%;
+}
+
+.table-buttons-first {
+	margin-right: 10%;
+}
+
+#barChartDiv {
+	margin-top: 50px;
+	height: 600px;
+	width: 100%;
+}
+
+#barChartDivSVG{
+	width: 100%;
+	height: 100%;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x path {
+  display: none;
+}
+
+#boroughPicker {
+	margin-top: 60px;
+	width: 100%;
+	height: 35px;
+}
+
+#consolidateRank {
+	width: 40%;
+	height: 35px;
+	margin-right: 18%;
+}
+
+#exportConsolidateRank {
+	width: 40%;
+	height: 35px;
+
+}
+
+#circularChartDivSVG{
+	width: 100%;
+	height: 500px;
+}

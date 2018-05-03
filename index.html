@@ -1,15 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="style.css">
+	<!-- Meta-->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<!-- Bootstrap -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Custom css -->
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<title> IronHacks tutorials </title>
 </head>
 <body>
-    <div class="container">
-        <h1>Hello World!</h1>
-        <button id="btn">Click me</button>
-    </div>
-    <script src="index.js"></script>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1" id="googleMapWraper">
+				<div id="googleMapContainer"></div>
+			</div>
+			<div class="col-md-10 col-md-offset-1">
+				<div id="mapButtonsDiv">
+					<button id="drawNB" class="mapButton">Draw districs boundaries</button>
+					<button id="drawMuseums" class="mapButton">Draw Museums</button>
+					<button id="drawGalleries" class="mapButton">Draw Galleries</button>
+					<button id="drawDistances" class="mapButton">Draw closest districts</button>
+					
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 col-md-offset-1">
+				<div id="tableWrapper">
+					<div id="tableScroll">
+						<table id="distanceTable">
+							<thead>
+								<tr>
+									<th colspan="3"> Districs by proximity </th>	
+								</tr>
+								<tr>
+									<th> Borough </th>
+									<th> District Code </th>
+									<th> Distance from NYU Stern School of Business in meters </th>
+								</tr>
+                            </thead>
+							<tbody id="mainDistanceTableBody">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div id="tableWrapper">
+					<div id="tableScroll">
+						<table id="crimesTable">
+							<thead>
+								<tr>
+									<th colspan="3"> Districs by Crimes </th>	
+								</tr>
+								<tr>
+									<th> Borough </th>
+									<th> District Code </th>
+									<th> Amount of crimes </th>
+								</tr>
+							</thead>
+							<tbody id="mainSecrurityTableBody">
+                            </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5 col-md-offset-1">
+				<div class="table-buttons-div">
+					<button id="updateDistanceTable" class="table-buttons table-buttons-first">Update Closest districts table</button>
+					<button id="exportDistance" class="table-buttons">Export Closest districs table</button>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="table-buttons-div">
+					<button id="updateCrimesTable" class="table-buttons table-buttons-first">Update Crime table</button>
+					<button id="exportCrimes" class="table-buttons">Export Crime table</button>
+				</div>
+			</div>
+			<div class="col-md-10 col-md-offset-1">
+				<div id="tableWrapper">
+					<div id="tableScroll">
+						<table id="affordabilityTable">
+							<thead>
+								<tr>
+									<th colspan="7"> Districs by affordability </th>	
+								</tr>
+								<tr>
+									<th> Borough </th>
+									<th> District Code </th>
+									<th> Extreme Low Houses </th>
+									<th> Very Low Houses </th>
+									<th> Low Houses </th>
+									<th> Moderate Houses </th>
+									<th> Middle Houses </th>
+								</tr>
+								</thead>
+								<tbody id="mainAffordabilityTableBody">
+								</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-10 col-md-offset-1">
+				<div class="table-buttons-div">
+					<button id="updateAffodabilityTable" class="table-buttons table-buttons-first">Update Affordability table</button>
+					<button id="exportAffordability" class="table-buttons">Export Afordability table</button>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<div id="chartButtonDiv">
+					<button id="drawBarChart">Draw charts</button>
+				</div>
+			</div>
+			<div class="col-md-10 col-md-offset-1">
+					<div class="col-md-9">
+						<div id="barChartDiv">
+							<svg id="barChartDivSVG"></svg>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<select name="select" id="boroughPicker"  onchange="drawBarChart(this.value)">
+						  <option value="0" selected>Manhattan</option> 
+						  <option value="1">The Bronx</option>
+						  <option value="2">Brooklyn</option>
+						  <option value="3">Queens</option>
+						  <option value="4">Staten Island</option>
+						</select>
+						<button id="consolidateRank">Display best options</button>
+						<button id="exportConsolidateRank">Export best options</button>
+						<div id="tableWrapper">
+							<div id="tableScroll">
+								<table id="bestOptionsTable">
+									<thead>
+										<tr>
+											<th colspan="4"> Best options </th>	
+										</tr>
+										<tr>
+											<th> Borough </th>
+											<th> District Code </th>
+											<th> Crimes </th>
+											<th> Distance </th>
+										</tr>
+									</thead>
+									<tbody id="bestOptionTableBody">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1" id="bestOptions">
+				<svg id="circularChartDivSVG"></svg>
+			</div>
+		</div>
+	</div>
+
+		<!-- Jquery -->
+	<script
+	  src="https://code.jquery.com/jquery-3.2.1.min.js"
+	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	  crossorigin="anonymous"></script>
+	  <!-- d3.j -->
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+		<!-- Circular Chart -->
+	<script type="text/javascript" src="circularHeatChart.js"></script>	
+		<!-- Custom js -->
+	<script type="text/javascript" src="index.js"></script>
+		<!-- Google Map -->
+   <script async defer
+	 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwWYDB9v1MopiTtPpUXMDaCwAlOQbtn3c&libraries=geometry&callback=onGoogleMapResponse">
+	</script>
 </body>
 </html>
