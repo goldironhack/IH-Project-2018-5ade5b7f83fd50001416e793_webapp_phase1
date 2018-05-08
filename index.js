@@ -10,64 +10,7 @@ const BOROUGHTS_NAMES = ["Manhattan", "The Bronx", "Brooklyn", "Queens", "Staten
 const NEW_YORK_UNNIVERSITY = {lat: 40.7291,lng: -73.9965}
 const HOUSING_SCORES = [10, 8, 7, 4, 1]
 const TABLE_NAMES = ["distanceTable", "crimesTable", "affordabilityTable", "bestOptionsTable"]
-const CRIME_RATIO = 1000
-
-const DATASET_URLS = {
-		NEIGHBORHOOD_TABULATION_AREAS : "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/nycd/FeatureServer/0/query?where=1=1&outFields=*&outSR=4326&f=geojson",
-		MUSEUMS_DATASE_URL: "https://data.cityofnewyork.us/api/views/fn6f-htvy/rows.json?accessType=DOWNLOAD",
-		GALLERIES_URL: "https://data.cityofnewyork.us/api/views/43hw-uvdj/rows.json?accessType=DOWNLOAD",
-		MARKETS_URL: "https://data.cityofnewyork.us/api/views/j8gx-kc43/rows.json?accessType=DOWNLOAD",
-		AIR_QUALITY_URL: "https://data.cityofnewyork.us/api/views/c3uy-2p5r/rows.json?accessType=DOWNLOAD", 
-		NEIGHBORHOOD_NAMES: "https://data.cityofnewyork.us/api/views/xyye-rtrs/rows.json?accessType=DOWNLOAD",
-		HOUSING_BY_BUILDING: "https://data.cityofnewyork.us/api/views/hg8x-zxpr/rows.json?accessType=DOWNLOAD",
-}
-/*
 //--------------------------------------------------------------------------------
-Flow:
-Request all the data from all the datasets:
-
-getNB(NEIGHBORHOOD_TABULATION_AREAS)
-getMuseums(MUSEUMS_DATASE_URL)
-getGalleries(GALLERIES_URL)
-getMarkets(MARKETS_URL)
-getAirQuality(AIR_QUALITY_URL)
-getCrimes()
-getNeighborhoodNames(NEIGHBORHOOD_NAMES)
-getHousingData(HOUSING_BY_BUILDING)
-
-All the data is storaged on the <datase_name>array variable
-//--------------------------------------------------------------------------------
-*/
-var neighborhoodsData = []
-var crimeData = []
-
-
-function populateDatasets(){
-	//Getting neighborhood data
-	$.get(DATASET_URLS["NEIGHBORHOOD_TABULATION_AREAS"], ( response ) => {
-		neighborhoodsData = response.data;
-	}).fail( ( response, status, error ) => {
-		// errors:
-		console.error(error);
-	}).always( ( response, status, error ) => {
-	});
-	// Getting crimes
-	$.ajax({
-    url: "https://data.cityofnewyork.us/resource/9s4h-37hy.json?$where=cmplnt_to_dt between '2015-12-31T00:00:00.000' and '2015-12-31T23:59:59.000' and within_circle(lat_lon, 40.7291, -73.9965, 50000)",
-    type: "GET",
-    data: {
-      "$limit" : CRIME_RATIO,
-      "$$app_token" : "j8zrS5jGkSUon2f1iDg6gnJim"
-    }
-	}).done(function(data) {
-	  	crimeData = data;
-	});
-
-
-}
-
-
-
 var map;
 
 var neighborhood_geoArray = []
@@ -84,10 +27,8 @@ var bestHouses = []
 
 function getNB( url ){
 	var data = $.get(url, () => {
-		console.log(JSON.parse(data.responseText))
 	})
 		.done(function () {
-			console.log(data)
 			let responseJSON = JSON.parse(data.responseText)
 			//console.log(responseJSON)
 			for (var i = 0; i < responseJSON.features.length; i++){
@@ -124,6 +65,8 @@ function getNB( url ){
 					}
 				}
 			}
+
+		console.log(neighborhood_geoArray)
 		})
 		.fail(function (error) {
 			//fail
@@ -135,7 +78,6 @@ function getGalleries( url ){
 		
 	})
 		.done(function () {
-			console.log(data)
 			for (var g = 0; g < data.responseJSON.data.length-1; g++){
 				var point = data.responseJSON.data[g][9]
 				point = point.substring(7, point.length-1)
@@ -186,6 +128,7 @@ function getMarkets( url ){
 		.done(function () {
 			for (var g = 0; g < data.responseJSON.data.length-1; g++){
 				var point = data.responseJSON.data[g]
+				//console.log(point)
 			}
 			
 		})
@@ -198,7 +141,6 @@ function getAirQuality( url ){
 	var data = $.get(url, () => {
 	})
 		.done(function () {
-			console.log(data)
 			for (var g = 0; g < data.responseJSON.data.length-1; g++){
 				var point = data.responseJSON.data[g]
 				
@@ -220,6 +162,8 @@ function getCrimes(){
       "$$app_token" : "j8zrS5jGkSUon2f1iDg6gnJim"
     }
 	}).done(function(data) {
+	  	console.log(data)
+	  	console.log("li")
 	  for (var i = 0; i < data.length; i++) {
 	  	let latLng = data[i].lat_lon.coordinates
 	  	crimeLocations.push({lat: latLng[1], lng: latLng[0]})
@@ -229,10 +173,8 @@ function getCrimes(){
 }
 function getNeighborhoodNames(url){
 	var data = $.get(url, () => {
-		console.log(data.responseJSON)
 	})
 		.done(function () {
-			console.log(data)
 			for (var i = 0; i < data.responseJSON.data.length; i++) {
 				var point = data.responseJSON.data[i][9]
 				point = point.substring(7, point.length-1)
@@ -255,6 +197,7 @@ function getHousingData(url){
 	var data = $.get(url, () => {
 	})
 		.done(function () {	
+			console.log(data.responseJSON.data)
 			for (var i = 0; i < data.responseJSON.data.length; i++) {
 				if(!(data.responseJSON.data[i][9] == "CONFIDENTIAL")){
 					housingData.push({
@@ -268,6 +211,7 @@ function getHousingData(url){
 					})
 				}
 			}
+			console.log(housingData)
 		})
 		.fail(function (error) {
 			//fail
@@ -350,6 +294,7 @@ function drawDistricsCenters(){
 	}
 
 	distances.sort(compareDistances)
+	console.log(distances)
 
 	for (var i = 0; i < distances.length; i++) {
 		neighborhood_geoArray[distances[i].index].distanceRank = i + 1
@@ -363,6 +308,8 @@ function drawDistricsCenters(){
 	  });
 
 	}
+
+	console.log(neighborhood_geoArray)
 }
 function compareDistances(a,b) {
   if (a.distanceFromUni < b.distanceFromUni)
@@ -393,6 +340,7 @@ function compareCrimes(a,b) {
   return 0;
 }
 function arrangeCrimesPerDistric(){
+	console.log(crimeLocations.length)
 	for (var i = 0; i < neighborhood_geoArray.length; i++) {
 		neighborhood_geoArray[i].crimes = 0
 		neighborhood_geoArray[i].crimeRank = 0
@@ -414,13 +362,13 @@ function arrangeCrimesPerDistric(){
 			}
 		}
 	}
-
+	console.log(neighborhood_geoArray)
 	for (var i = 0; i < neighborhood_geoArray.length; i++) {
 		crimes[i] = {crimes : neighborhood_geoArray[i].crimes, index: i}
 	}
 
 	crimes.sort(compareCrimes)
-
+	console.log(crimes)
 
 	for (var i = 0; i < crimes.length; i++) {
 		neighborhood_geoArray[crimes[i].index].crimeRank = crimes.length - i
@@ -493,6 +441,9 @@ function updateAffordabilityTable(){
 			}
 		}
 	}
+
+	console.log(neighborhood_geoArray)
+
 	for (var i = 0; i < neighborhood_geoArray.length; i++) {
 		for (var j = 0; j < neighborhood_geoArray[i].housingAfData.length; j++) {
 			neighborhood_geoArray[i].affodableScore = neighborhood_geoArray[i].affodableScore + neighborhood_geoArray[i].housingAfData[j].score
@@ -504,7 +455,7 @@ function updateAffordabilityTable(){
 	}
 
 	housingScores.sort(compareScores)
-
+	console.log(housingScores)
 
 	for (var i = 0; i < housingScores.length; i++) {
 		neighborhood_geoArray[housingScores[i].index].housingRank = i + 1
@@ -530,6 +481,7 @@ function updateAffordabilityTable(){
 		moderate.innerHTML = housingData[i].moderate;
 		middle.innerHTML = housingData[i].middle;
 	}
+	console.log(neighborhood_geoArray)
 }
 function calculateBestHouses(){
 	for (var i = 0; i < neighborhood_geoArray.length; i++) {
@@ -547,7 +499,7 @@ function calculateBestHouses(){
 	}
 
 	neighborhood_geoArray.sort(compareBestOption)
-
+	console.log(neighborhood_geoArray)
 
 	tableReference = $("#bestOptionTableBody")[0];
 	var newRow, borough, districtID, crimes, distance;
@@ -606,7 +558,7 @@ function exportTableToCSV(tableId) {
         
         csv.push(row.join(","));        
     }
-
+    console.log(csv)
     // Download CSV file
     downloadCSV(csv.join("\n"), tableId);
 }
@@ -655,24 +607,29 @@ function drawDistrictChart(borough){
 	var color = "white"
 	switch (borough) {
 	  case BOROUGHTS_NAMES[0]:
+	    console.log('is ' + BOROUGHTS_NAMES[0]);
 	    for(var i=0; i<5; i++) data[i] = {title: i, value: [Math.round(Math.random()*100)]};
 	    color = getRandomColor()
 	    break;
 	  case BOROUGHTS_NAMES[1]:
 	    for(var i=0; i<10; i++) data[i] = {title: i, value: [Math.round(Math.random()*100)]};
 	    color = getRandomColor()
+	    console.log('is ' + BOROUGHTS_NAMES[1]);
 	    break;
     case BOROUGHTS_NAMES[2]:
     	for(var i=0; i<15; i++) data[i] = {title: i, value: [Math.round(Math.random()*100)]};
 	    color = getRandomColor()
+	    console.log('is ' + BOROUGHTS_NAMES[2]);
 	    break;
     case BOROUGHTS_NAMES[3]:
     	for(var i=0; i<20; i++) data[i] = {title: i, value: [Math.round(Math.random()*100)]};
 	    color = getRandomColor()
+	    console.log('is ' + BOROUGHTS_NAMES[3]);
 	    break;
     case BOROUGHTS_NAMES[4]:
     	for(var i=0; i<25; i++) data[i] = {title: i, value: [Math.round(Math.random()*100)]};
 	    color = getRandomColor()
+	    console.log('is ' + BOROUGHTS_NAMES[4]);
 	    break;
 	}
 
@@ -744,7 +701,8 @@ function drawBarChart(borough){
     .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
     .enter().append("rect")
       .attr("x", function(d) { return x1(d.key); })
-      .attr("y", function(d) { return y(d.value); })
+      .attr("y", function(d) { console.log(d)
+      	return y(d.value); })
       .attr("width", x1.bandwidth())
       .attr("height", function(d) { return height - y(d.value); })
       .attr("fill", function(d) { return z(d.key); });
@@ -790,8 +748,7 @@ function drawBarChart(borough){
   drawCircularChar()
 }
 function drawCircularChar(){
-
-	/* Define an array of objects */
+		/* Define an array of objects */
 	var data = [];
 	//for(var i=0; i<15; i++) data[i] = {title: "Segment "+i, value: Math.round(Math.random()*100)};
 
@@ -822,8 +779,10 @@ function drawCircularChar(){
 	/* Add a mouseover event */
 	d3.selectAll("#circularChartDivSVG path").on('mouseover', function() {
 	    var d = d3.select(this).data()[0];
+	    console.log(d.title + ' has value ' + d.value);
 	});
 }
+
 $(document).ready( function(){
 	
 	$("#drawNB").on("click", drawNB)
@@ -840,6 +799,8 @@ $(document).ready( function(){
 	$("#exportConsolidateRank").on("click", exportBestTable)
 	$("#consolidateRank").on("click", calculateBestHouses)
 
+
+	
 	getNB(NEIGHBORHOOD_TABULATION_AREAS)
 	getMuseums(MUSEUMS_DATASE_URL)
 	getGalleries(GALLERIES_URL)
@@ -848,4 +809,5 @@ $(document).ready( function(){
 	getCrimes()
 	getNeighborhoodNames(NEIGHBORHOOD_NAMES)
 	getHousingData(HOUSING_BY_BUILDING)
+
 })
